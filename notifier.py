@@ -4,7 +4,6 @@
 
 import requests
 import json
-from datetime import datetime
 from plyer import notification
 from flask import Flask, request, jsonify
 from credentials import host_ip
