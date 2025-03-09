@@ -46,6 +46,35 @@ def post_to_db_log(message):
     
     return json_data
 
+
+def send_email(subject, body):
+    """
+    Sends email to designated email. 
+
+    :param subject: email subject
+    :param body: email body
+    """
+    sender_email = from_address
+    password = from_password
+    receiver_email = to_email
+
+    # Create the email message
+    msg = EmailMessage()
+    msg.set_content(body)
+    msg['Subject'] = subject
+    msg['From'] = sender_email
+    msg['To'] = receiver_email
+
+    # Send the email
+    try:
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+            server.login(sender_email, password)
+            server.send_message(msg)
+        print("Email sent successfully!")
+    except Exception as e:
+        print(f"Error: {e}")
+
+
 app = Flask(__name__)
 
 @app.route('/event', methods=['POST'])
@@ -70,27 +99,7 @@ def receive_message():
                 )
         
             # Email notification
-            sender_email = from_address
-            password = from_password
-            receiver_email = to_email
-            subject = alert_title
-            body = alert_message
-
-            # Create the email message
-            msg = EmailMessage()
-            msg.set_content(body)
-            msg['Subject'] = subject
-            msg['From'] = sender_email
-            msg['To'] = receiver_email
-
-            # Send the email
-            try:
-                with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-                    server.login(sender_email, password)
-                    server.send_message(msg)
-                print("Email sent successfully!")
-            except Exception as e:
-                print(f"Error: {e}")
+            send_email(alert_title, alert_message)
 
         return jsonify({'response': 'Event data as JSON received'}), 200
     else:
