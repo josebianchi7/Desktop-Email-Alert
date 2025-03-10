@@ -96,9 +96,10 @@ def receive_message():
                 message=alert_message,
                 timeout=10,
                 )
-        
-            # Email notification
-            send_email(alert_title, alert_message)
+
+            if 'source' in data and data.get('source') != 'Bandwidth':
+                # Email notification
+                send_email(alert_title, alert_message)
 
         return jsonify({'response': 'Event data as JSON received'}), 200
     else:
