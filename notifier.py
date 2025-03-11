@@ -98,6 +98,8 @@ def receive_message():
                 )
 
             if 'source' in data and data.get('source') != 'Bandwidth':
+                print(alert_title)
+                print(alert_message)
                 # Email notification
                 send_email(alert_title, alert_message)
 
